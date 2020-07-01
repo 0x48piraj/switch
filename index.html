@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="shortcut icon" type="image/x-icon" href="http://nmoroze.github.io/swap/favicon.ico">
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Swap</title>
+	<link rel="shortcut icon" type="image/x-icon" href="http://nmoroze.github.io/swap/favicon.ico">
 	<script src="js/tile.js"></script>
 	<script src="js/ai.js"></script>
 	<script src="js/levels.js"></script>
@@ -13,7 +15,7 @@
 	<script src="js/input.js"></script>
 	<script type="text/javascript">
 		window.onload = function() {
-			//http://stackoverflow.com/questions/7425502/how-to-return-integer-from-url-hash-using-javascript
+			// http://stackoverflow.com/questions/7425502/how-to-return-integer-from-url-hash-using-javascript
 			var level = window.location.hash.match(/\d+/) || 1;
 			world.init(level-1, "canvas", "hud", "tip");
 			document.getElementById("reset").onclick = function() {
@@ -79,20 +81,6 @@
 <span id="tip" style="font-size: 24px; text-align: center;"></span>
 <br>
 </div>	
-<!-- AddThis Smart Layers BEGIN -->
-<!-- Go to http://www.addthis.com/get/smart-layers to customize -->
-<script type="text/javascript" src="https://s7.addthis.com/js/300/addthis_widget.js#pubid=ra-528c256940c52555"></script>
-<script type="text/javascript">
-  addthis.layers({
-    'theme' : 'transparent',
-    'share' : {
-      'position' : 'left',
-      'numPreferredServices' : 5
-    },  
-    'whatsnext' : {},  
-    'recommended' : {} 
-  });
-</script>  
-<!-- AddThis Smart Layers END -->
+
 </body>
 </html>

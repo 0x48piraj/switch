@@ -3,7 +3,7 @@ var world = function() {
 	var floor = [];
 	var gridSize;
 	var curLevel;
-	var deaths = 0;
+	var lives = 3;
 	var intervalId;
 	var fps = 30;
 	var hitSpace = false;
@@ -11,6 +11,8 @@ var world = function() {
 	var hasDied = false;
 	var prevTime;
 	var hasWon = false;
+
+
 
 	var init = function(level, canvasId, hudId, tipId) {
 		renderer.init(canvasId, hudId, tipId);
@@ -40,10 +42,10 @@ var world = function() {
 		input.reset();
 				
 		loadLevel(level);
-		renderer.renderText(deaths, curLevel, levels[curLevel].tip);
+		renderer.renderText(lives, curLevel, levels[curLevel].tip);
 
 		intervalId = setInterval(run, 1000 / fps);
-		run();
+		run();		
 	}
 
 	var victory = function() {
@@ -56,14 +58,21 @@ var world = function() {
 		hasWon = true;
 	}
 
+
 	var death = function() {
 		// alert("You died! :O");
 		createDialogue("You died!");
 		clearInterval(intervalId);
-		if(!hasDied) 
-			deaths++; 
+		if(!hasDied){ 
+			lives--;
+			if(lives === 0 ){
+				createDialogue("Game Over!")
+				curLevel = 0;
+				lives = 3;
+			}
+		} 
 		hasDied = true;
-		renderer.renderText(deaths, curLevel, levels[curLevel].tip);
+		renderer.renderText(lives, curLevel, levels[curLevel].tip);
 		// initLevel(curLevel);
 	}
 

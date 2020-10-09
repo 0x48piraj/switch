@@ -3,7 +3,7 @@ var world = function() {
 	var floor = [];
 	var gridSize;
 	var curLevel;
-	var deaths = 0;
+	var lives = 3;
 	var intervalId;
 	var fps = 30;
 	var hitSpace = false;
@@ -40,7 +40,7 @@ var world = function() {
 		input.reset();
 				
 		loadLevel(level);
-		renderer.renderText(deaths, curLevel, levels[curLevel].tip);
+		renderer.renderText(lives, curLevel, levels[curLevel].tip);
 
 		intervalId = setInterval(run, 1000 / fps);
 		run();
@@ -61,10 +61,14 @@ var world = function() {
 		createDialogue("You died!");
 		clearInterval(intervalId);
 		if(!hasDied) 
-			deaths++; 
+			lives--; 
 		hasDied = true;
-		renderer.renderText(deaths, curLevel, levels[curLevel].tip);
+		renderer.renderText(lives, curLevel, levels[curLevel].tip);
 		// initLevel(curLevel);
+		if(lives === 0){
+			createDialogue("Game Over!");
+			location.reload();
+		}
 	}
 
 	var loadLevel = function(index) {

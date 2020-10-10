@@ -1,3 +1,4 @@
+
 var world = function() {
 	var aiEntities = [];
 	var floor = [];
@@ -11,6 +12,9 @@ var world = function() {
 	var hasDied = false;
 	var prevTime;
 	var hasWon = false;
+	var timeleft = 15;
+	var countdownId
+	
 
 
 
@@ -28,6 +32,7 @@ var world = function() {
 			clearInterval(intervalId); //makes sure we don't run dual loops
 
 		curLevel = level;
+		timeleft = 15;
 		if(level==levels.length) {
 			// alert("That's all folks!");
 			createDialogue("That's all folks");
@@ -42,7 +47,7 @@ var world = function() {
 		input.reset();
 				
 		loadLevel(level);
-		renderer.renderText(lives, curLevel, levels[curLevel].tip);
+		renderer.renderText(timeleft, lives, curLevel, levels[curLevel].tip);
 
 		intervalId = setInterval(run, 1000 / fps);
 		run();		
@@ -54,10 +59,11 @@ var world = function() {
 			createDialogue("You won!");
 			// initLevel(curLevel+1);
 			curLevel++;
+			
 		}
 		hasWon = true;
 	}
-
+	
 
 	var death = function() {
 		// alert("You died! :O");
@@ -72,8 +78,8 @@ var world = function() {
 			}
 		} 
 		hasDied = true;
-		renderer.renderText(lives, curLevel, levels[curLevel].tip);
-		// initLevel(curLevel);
+		renderer.renderText(timeleft, lives, curLevel, levels[curLevel].tip);
+		initLevel(curLevel);
 	}
 
 	var loadLevel = function(index) {
@@ -173,25 +179,42 @@ var world = function() {
 	var createDialogue = function(info) {
 		input.dialogueMode();
 		dialogue = info;
+		clearInterval(countdownId);
 	}
 
 	var closeDialogue = function() {
 		input.gameMode();
 		dialogue = "";
 		initLevel(curLevel);
+		clearInterval(countdownId);
+		countdownId = setInterval(countdown, 1000);
 	}
 
 	var resetLevel = function() {
 		createDialogue("Level Reset!");
 		initLevel(curLevel);
 	}
+	
+	 var countdown = () => {
+		timeleft -=1;
+		renderer.renderText(timeleft, lives, curLevel, levels[curLevel].tip);
+		if (timeleft === 0) {
+			createDialogue("TIME-UP!");
+			death();
+		}
+	}
 
-	return {
+	
+		
+		return {
+		timeleft:timeleft,
 		init: init,
 		victory: victory,
 		cyclePlayer: cyclePlayer,
 		death: death,
 		closeDialogue: closeDialogue,
 		resetLevel: resetLevel,
-	}
+		}
+	
+
 }();

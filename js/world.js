@@ -1,9 +1,10 @@
+
 var world = function() {
 	var aiEntities = [];
 	var floor = [];
 	var gridSize;
 	var curLevel;
-	var deaths = 0;
+	var lives = 3;
 	var intervalId;
 	var fps = 30;
 	var hitSpace = false;
@@ -11,6 +12,11 @@ var world = function() {
 	var hasDied = false;
 	var prevTime;
 	var hasWon = false;
+	var timeleft = 15;
+	var countdownId
+	
+
+
 
 	var init = function(level, canvasId, hudId, tipId) {
 		renderer.init(canvasId, hudId, tipId);
@@ -26,6 +32,7 @@ var world = function() {
 			clearInterval(intervalId); //makes sure we don't run dual loops
 
 		curLevel = level;
+		timeleft = 15;
 		if(level==levels.length) {
 			// alert("That's all folks!");
 			createDialogue("That's all folks");
@@ -40,10 +47,10 @@ var world = function() {
 		input.reset();
 				
 		loadLevel(level);
-		renderer.renderText(deaths, curLevel, levels[curLevel].tip);
+		renderer.renderText(timeleft, lives, curLevel, levels[curLevel].tip);
 
 		intervalId = setInterval(run, 1000 / fps);
-		run();
+		run();		
 	}
 
 	var victory = function() {
@@ -52,19 +59,32 @@ var world = function() {
 			createDialogue("You won!");
 			// initLevel(curLevel+1);
 			curLevel++;
+			
 		}
 		hasWon = true;
 	}
+	
 
 	var death = function() {
 		// alert("You died! :O");
+		if( timeleft === 0){
+			createDialogue("TIME-UP! You Died!")
+		}
+		else{
 		createDialogue("You died!");
+		}
 		clearInterval(intervalId);
-		if(!hasDied) 
-			deaths++; 
+		if(!hasDied){ 
+			lives--;
+			if(lives === 0 ){
+				createDialogue("Game Over!")
+				curLevel = 0;
+				lives = 3;
+			}
+		} 
 		hasDied = true;
-		renderer.renderText(deaths, curLevel, levels[curLevel].tip);
-		// initLevel(curLevel);
+		renderer.renderText(timeleft, lives, curLevel, levels[curLevel].tip);
+		initLevel(curLevel);
 	}
 
 	var loadLevel = function(index) {
@@ -164,25 +184,40 @@ var world = function() {
 	var createDialogue = function(info) {
 		input.dialogueMode();
 		dialogue = info;
+		clearInterval(countdownId);
 	}
 
 	var closeDialogue = function() {
 		input.gameMode();
 		dialogue = "";
 		initLevel(curLevel);
+		clearInterval(countdownId);
+		countdownId = setInterval(countdown, 1000);
 	}
 
 	var resetLevel = function() {
 		createDialogue("Level Reset!");
 		initLevel(curLevel);
 	}
-
-	return {
+	
+	 var countdown = () => {
+		timeleft -=1;
+		renderer.renderText(timeleft, lives, curLevel, levels[curLevel].tip);
+		if (timeleft === 0) {
+			createDialogue("TIME-UP!");
+			death();
+		}
+	}
+	
+		return {
+		timeleft:timeleft,
 		init: init,
 		victory: victory,
 		cyclePlayer: cyclePlayer,
 		death: death,
 		closeDialogue: closeDialogue,
 		resetLevel: resetLevel,
-	}
+		}
+	
+
 }();

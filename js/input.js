@@ -1,3 +1,4 @@
+
 var input = {
 	right: false,
 	left: false,
@@ -28,7 +29,7 @@ combos_dialogue = [
 	"prevent_default": true,
 }
 ];
-
+ 
 combos_inGame = [
 {
 	"keys": "up",
@@ -163,7 +164,6 @@ combos_inGame = [
 	"is_sequence": true,
 },
 ];
-
 
 
 

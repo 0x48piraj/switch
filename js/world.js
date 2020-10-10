@@ -67,7 +67,12 @@ var world = function() {
 
 	var death = function() {
 		// alert("You died! :O");
+		if( timeleft === 0){
+			createDialogue("TIME-UP! You Died!")
+		}
+		else{
 		createDialogue("You died!");
+		}
 		clearInterval(intervalId);
 		if(!hasDied){ 
 			lives--;
@@ -203,9 +208,7 @@ var world = function() {
 			death();
 		}
 	}
-
 	
-		
 		return {
 		timeleft:timeleft,
 		init: init,
